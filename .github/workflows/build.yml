@@ -1,0 +1,29 @@
+name: Compile Minecraft Mod
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Folosește '21' dacă e un mod pentru versiuni mai noi de Minecraft (1.20.5+)
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Upload compiled mod (.jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-mod
+          path: build/libs/*.jar
+          
